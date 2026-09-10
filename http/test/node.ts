@@ -7,6 +7,8 @@ import {HTTPSource, makeHTTPDriver} from '../src/rxjs';
 import {runTests} from './browser/common';
 import {globalSandbox} from './support/global';
 import {startServer} from './support/server';
+// tslint:disable-next-line:no-import-side-effect
+import './mock-http-source';
 
 declare const process: any;
 process.env.PORT = 5000;
