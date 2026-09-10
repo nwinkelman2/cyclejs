@@ -37,6 +37,14 @@ export function optionsToSuperagent(rawReqOptions: RequestOptions) {
   if (reqOptions.type) {
     request = request.type(reqOptions.type);
   }
+  if (reqOptions.formData && reqOptions.send) {
+    throw new Error(
+      `Please provide only one of \`send\` or \`formData\` in the request options.`
+    );
+  }
+  if (reqOptions.formData) {
+    request = request.send(reqOptions.formData);
+  }
   if (reqOptions.send) {
     request = request.send(reqOptions.send);
   }
