@@ -126,6 +126,28 @@ sources.HTTP
 ```
 For more information, refer to the [xstream documentation for replaceError](https://github.com/staltz/xstream#replaceError) or the [RxJS documention for catch](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/catch.md).
 
+## Uploading browser files
+
+Browser `File` objects do not expose filesystem paths. Append them to a
+`FormData` instance and pass it as `formData` instead of using the Node-oriented
+`attach` option:
+
+```js
+const formData = new FormData();
+for (const file of document.querySelector('input[type=file]').files) {
+  formData.append('files[]', file, file.name);
+}
+
+const request$ = xs.of({
+  url: '/upload',
+  method: 'POST',
+  formData,
+});
+```
+
+Do not set `Content-Type` for this request. The browser adds the required
+multipart boundary when Superagent sends the `FormData` payload.
+
 ## More information
 
 For a more advanced usage, check the [Search example](https://github.com/cyclejs/cyclejs/tree/master/examples/http-search-github).

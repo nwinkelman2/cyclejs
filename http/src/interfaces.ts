@@ -17,6 +17,8 @@ export interface RequestOptions {
   method?: string;
   query?: Object;
   send?: Object | string;
+  /** A browser FormData payload, including File or Blob values. */
+  formData?: any;
   headers?: Object;
   accept?: string;
   type?: string;

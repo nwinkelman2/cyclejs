@@ -12,6 +12,7 @@ import {Observable, of, merge, Subject} from 'rxjs';
 import {mergeAll, switchMap, map, delay, shareReplay} from 'rxjs/operators';
 import {setup} from '@cycle/rxjs-run';
 import isolate from '@cycle/isolate';
+import {optionsToSuperagent} from '../../src/http-driver';
 
 export function runTests(uri: string) {
   describe('makeHTTPDriver', function() {
@@ -19,6 +20,32 @@ export function runTests(uri: string) {
       assert.strictEqual(typeof makeHTTPDriver, 'function');
       const output = makeHTTPDriver();
       assert.strictEqual(typeof output, 'function');
+    });
+  });
+
+  describe('request options', function() {
+    it('sends a formData payload', function() {
+      const formData = {file: 'browser-file'};
+      const request = optionsToSuperagent({
+        url: uri + '/upload',
+        method: 'POST',
+        formData,
+      });
+
+      assert.deepStrictEqual((request as any)._data, formData);
+    });
+
+    it('rejects ambiguous send and formData payloads', function() {
+      assert.throws(
+        () =>
+          optionsToSuperagent({
+            url: uri + '/upload',
+            method: 'POST',
+            send: {name: 'Ada'},
+            formData: {file: 'browser-file'},
+          }),
+        /only one of `send` or `formData`/
+      );
     });
   });
 
